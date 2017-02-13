@@ -148,49 +148,36 @@ public class AddNews implements Command {
         switch (category) {
 
             case "MOVIE":
-                try {
 
                     addMovie();
-                    newsService.addNews(news);
-                    response = "your news was added";
 
-                } catch (ServiceException e) {
-
-                    response = "something went wrong";
-                }
                 break;
 
             case "BOOK":
 
-                try {
-
                     addBook();
-                    newsService.addNews(news);
-                    response = "your news was added";
 
-                } catch (ServiceException e) {
-
-                    response = "something went wrong";
-                }
 
                 break;
 
             case "MUSIC":
 
-                try {
-
                     addMusic();
-                    newsService.addNews(news);
-                    response = "your news was added";
 
-                } catch (ServiceException e) {
 
-                    response = "something went wrong";
-                }
                 break;
 
         }
 
+        try {
+
+            newsService.addNews(news);
+            response = "your news was added";
+
+        } catch (ServiceException e) {
+
+            response = "something went wrong";
+        }
 
         return response;
 
