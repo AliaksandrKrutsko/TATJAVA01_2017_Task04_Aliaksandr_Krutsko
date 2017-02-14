@@ -8,7 +8,9 @@ import controller.command.ShowNewsBaseRow;
 
 public class Controller {
 
-    public void executeTask(String request){
+    public void executeTask(String request) {
+
+
 
         String command;
         command = request.toUpperCase();

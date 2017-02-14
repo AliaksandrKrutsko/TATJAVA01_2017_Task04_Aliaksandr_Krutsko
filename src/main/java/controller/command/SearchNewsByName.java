@@ -9,10 +9,13 @@ import service.ServiceFactory;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class SearchNewsByName implements Command {
 
+    private static Logger log = Logger.getLogger(SearchNewsByName.class.getName());
 
     @Override
     public String execute(String request) {
@@ -36,6 +39,7 @@ public class SearchNewsByName implements Command {
         } catch (ServiceException e) {
 
             response = "something went wrong";
+            log.log(Level.WARNING, e.getLocalizedMessage());
         }
 
         return response;

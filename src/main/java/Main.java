@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] argv) throws IOException, ServiceException, DaoException, SQLException, ClassNotFoundException {
+    public static void main(String[] argv) throws ServiceException, DaoException {
 
         View view = new ViewImpl();
         view.enterCommand();

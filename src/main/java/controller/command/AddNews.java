@@ -12,11 +12,13 @@ import service.ServiceFactory;
 
 
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class AddNews implements Command {
 
-
+    private static Logger log = Logger.getLogger(AddNews.class.getName());
 
     private String name = null;
     private String response;
@@ -46,6 +48,7 @@ public class AddNews implements Command {
         }
         catch (ServiceException e) {
             response = "movie wasn't added";
+            log.log(Level.WARNING, e.getLocalizedMessage());
         }
         return response;
 
@@ -75,6 +78,7 @@ public class AddNews implements Command {
         }
         catch (ServiceException e) {
             response = "book wasn't added";
+            log.log(Level.WARNING, e.getLocalizedMessage());
         }
 
         return response;
@@ -103,6 +107,7 @@ public class AddNews implements Command {
         }
         catch (ServiceException e) {
             response = "music disc wasn't added";
+            log.log(Level.WARNING, e.getLocalizedMessage());
         }
 
         return response;
@@ -177,6 +182,7 @@ public class AddNews implements Command {
         } catch (ServiceException e) {
 
             response = "something went wrong";
+            log.log(Level.WARNING, e.getLocalizedMessage());
         }
 
         return response;

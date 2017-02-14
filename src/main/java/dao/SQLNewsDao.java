@@ -4,6 +4,8 @@ import bean.Book;
 import bean.Movie;
 import bean.Music;
 import bean.News;
+import connection.ConnectionPool;
+import connection.ConnectionPoolException;
 import helper.Config;
 
 import java.io.IOException;
@@ -16,39 +18,6 @@ public class SQLNewsDao implements NewsDao {
     private ResultSet rs = null;
     private PreparedStatement ps = null;
 
-    private static final String JDBC_DRIVER = Config.jdbcDriver();
-    private static final String DB_URL = Config.dbUrl();
-    private static final String USER = Config.user();
-    private static final String PASS = Config.pass();
-
-
-
-
-    public void connect() throws DaoException {
-
-        try {
-
-            Class.forName(JDBC_DRIVER);
-            con = DriverManager.getConnection(DB_URL, USER, PASS);
-            System.out.println("connection established...");
-        } catch (ClassNotFoundException e) {
-            throw new DaoException("Class Not Found");
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-//        } finally {
-//            try {
-//                if (con != null) {con.close();}
-//                if (rs !=null) {rs.close();}
-//            }
-//            catch (SQLException e) {
-//                throw new DaoException(e.getMessage());
-//            }
-        }
-
-
-    }
-
-
     public News showNewsBaseRow (int key) throws DaoException {
 
 
@@ -56,9 +25,11 @@ public class SQLNewsDao implements NewsDao {
         News news = new News();
         try {
 
+
             if (con == null) {
-                connect();
+                con = ConnectionPool.getInstance().takeConnection();
             }
+
             ps = con.prepareStatement(sql);
 
             ps.setInt(1, key);
@@ -75,12 +46,16 @@ public class SQLNewsDao implements NewsDao {
 
         } catch (SQLException e) {
             throw new DaoException(e.getMessage());
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             throw new DaoException("There's no such row");
+        } catch (ConnectionPoolException e) {
+            throw new DaoException(e.getMessage());
+        } finally {
+
+            if (con != null || rs != null || ps != null) {
+                ConnectionPool.getInstance().closeConnection(con, ps, rs);
+            }
         }
-
-
     }
 
 
@@ -90,7 +65,8 @@ public class SQLNewsDao implements NewsDao {
 
         try {
             if (con == null) {
-            connect();}
+                con = ConnectionPool.getInstance().takeConnection();
+            }
             String sql = "INSERT INTO news (name, category, content) VALUES(?, ?, ?)";
             ps = con.prepareStatement(sql);
 
@@ -100,7 +76,16 @@ public class SQLNewsDao implements NewsDao {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DaoException(e);
+            throw new DaoException(e.getMessage());
+        }
+        catch (ConnectionPoolException e) {
+            throw new DaoException(e.getMessage());
+        }
+        finally {
+
+            if (con != null || rs != null || ps != null) {
+                ConnectionPool.getInstance().closeConnection(con, ps, rs);
+            }
         }
 
     }
@@ -111,7 +96,7 @@ public class SQLNewsDao implements NewsDao {
 
         try {
             if (con == null) {
-                connect();
+                con = ConnectionPool.getInstance().takeConnection();
             }
             String sql = "INSERT INTO movie (name, director, genre, year) VALUES(?, ?, ?, ?)";
             ps = con.prepareStatement(sql);
@@ -125,6 +110,14 @@ public class SQLNewsDao implements NewsDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+        catch (ConnectionPoolException e) {
+            throw new DaoException(e.getMessage());
+        } finally {
+
+            if (con != null || rs != null || ps != null) {
+                ConnectionPool.getInstance().closeConnection(con, ps, rs);
+            }
+        }
 
     }
 
@@ -133,7 +126,7 @@ public class SQLNewsDao implements NewsDao {
 
         try {
             if (con == null) {
-                connect();
+                con = ConnectionPool.getInstance().takeConnection();
             }
             String sql = "INSERT INTO book (name, author, year) VALUES(?, ?, ?)";
             ps = con.prepareStatement(sql);
@@ -146,6 +139,14 @@ public class SQLNewsDao implements NewsDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+        catch (ConnectionPoolException e) {
+            throw new DaoException(e.getMessage());
+        }finally {
+
+            if (con != null || rs != null || ps != null) {
+                ConnectionPool.getInstance().closeConnection(con, ps, rs);
+            }
+        }
 
     }
 
@@ -153,7 +154,7 @@ public class SQLNewsDao implements NewsDao {
 
         try {
             if (con == null) {
-                connect();
+                con = ConnectionPool.getInstance().takeConnection();
             }
             String sql = "INSERT INTO music (name, band, year) VALUES(?, ?, ?)";
             ps = con.prepareStatement(sql);
@@ -165,7 +166,14 @@ public class SQLNewsDao implements NewsDao {
 
         } catch (SQLException e) {
             throw new DaoException(e);
-        }
+        } catch (ConnectionPoolException e) {
+            throw new DaoException(e.getMessage());}
+            finally {
+
+                if (con != null || rs != null || ps != null) {
+                    ConnectionPool.getInstance().closeConnection(con, ps, rs);
+                }
+            }
 
     }
 
@@ -176,7 +184,7 @@ public class SQLNewsDao implements NewsDao {
         News news = new News();
         try {
             if (con == null) {
-                connect();
+                con = ConnectionPool.getInstance().takeConnection();
             }
             String sql = "SELECT name, category, content FROM news WHERE name LIKE '%" + name + "%'";
             ps = con.prepareStatement(sql);
@@ -191,7 +199,12 @@ public class SQLNewsDao implements NewsDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+        catch (ConnectionPoolException e) {
+            throw new DaoException(e.getMessage());}
         finally {
+            if (con != null || rs != null || ps != null) {
+                ConnectionPool.getInstance().closeConnection(con, ps, rs);
+            }
             return news;
         }
 

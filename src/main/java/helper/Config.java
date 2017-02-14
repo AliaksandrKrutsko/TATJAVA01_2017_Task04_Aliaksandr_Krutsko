@@ -39,6 +39,7 @@ public class Config {
     public static String pass() {
         return config.getProperty("PASS");
     }
+    public static String poolsize() {return config.getProperty("DB_POLL_SIZE");}
 
 
 }
