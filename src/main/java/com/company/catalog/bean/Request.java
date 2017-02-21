@@ -9,6 +9,11 @@ public class Request implements Serializable {
     private int key;
     private String search;
     private String category;
+    private String name;
+    private Movie movie;
+    private Book book;
+    private Music music;
+    private String content;
 
 
 
@@ -20,12 +25,22 @@ public class Request implements Serializable {
     public String getSearch() {return search;}
     public int getKey() {return key;}
     public String getCategory() {return category;}
+    public String getName() {return name;}
+    public Movie getMovie() {return movie;}
+    public Book getBook() {return book;}
+    public Music getMusic() {return music;}
+    public String getContent() {return content;}
 
 
     public void setCommand(String command) {this.command = command;}
     public void setKey(int key) {this.key=key;}
     public void setSearch(String  search) {this.search = search;}
     public void setCategory(String category) {this.category = category;}
+    public void setName(String name) {this.name = name;}
+    public void setMovie(Movie movie) {this.movie = movie;}
+    public void setBook(Book book) {this.book = book;}
+    public void setMusic(Music music) {this.music = music;}
+    public void setContent(String content) {this.content = content;}
 
     @Override
     public int hashCode() {
@@ -35,6 +50,7 @@ public class Request implements Serializable {
         result = prime * result + command.hashCode();
         result = prime * result + search.hashCode();
         result = prime * result + key;
+        result = prime * result + movie.hashCode();
         return result;
     }
 
