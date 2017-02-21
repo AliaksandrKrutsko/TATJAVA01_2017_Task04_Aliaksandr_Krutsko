@@ -1,68 +1,34 @@
-package com.company.catalog.controller.command;
+package controller.command;
+import bean.News;
+
+import controller.Command;
+import service.NewsService;
+import service.ServiceException;
+import service.ServiceFactory;
 
 
-import com.company.catalog.bean.*;
-import com.company.catalog.controller.Command;
-import com.company.catalog.service.NewsService;
-import com.company.catalog.service.ServiceException;
-import com.company.catalog.service.ServiceFactory;
-import java.util.logging.Logger;
-
+import java.io.IOException;
 import java.util.Scanner;
-import java.util.logging.Level;
-
-public class AddNews implements Command{
-
-    private static Logger log = Logger.getLogger(AddNews.class.getName());
-
-    private String name = null;
-    private String response;
 
 
-    public String execute(Request request) {
+public class AddNews implements Command {
+
+    public String execute(String request) {
 
 
         News news = new News();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter name: ");
+        news.setName(scanner.nextLine());
+        System.out.println("Enter category: ");
+        news.setCategory(scanner.nextLine());
+        System.out.println("Enter content");
+        news.setContent(scanner.nextLine());
 
-        String category = request.getCategory();
+
+        String response;
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         NewsService newsService = serviceFactory.getNewsService();
-        Scanner scanner = new Scanner(System.in);
-
-        switch (category.toUpperCase()) {
-            case "MOVIE":
-
-                try {
-                    newsService.addMovie(request.getMovie());
-                } catch (ServiceException e) {
-                    log.log(Level.WARNING, e.getLocalizedMessage() );
-                }
-                break;
-
-            case "BOOK":
-
-                try {
-                    newsService.addBook(request.getBook());
-                } catch (ServiceException e) {
-                    log.log(Level.WARNING, e.getLocalizedMessage() );
-                }
-                break;
-
-            case "MUSIC":
-                try {
-                    newsService.addMusic(request.getMusic());
-                } catch (ServiceException e) {
-                    log.log(Level.WARNING, e.getLocalizedMessage() );
-                }
-
-        }
-
-
-        news.setName(request.getName());
-        news.setCategory(category);
-        news.setContent(request.getContent());
-
-
 
         try {
 
@@ -72,12 +38,9 @@ public class AddNews implements Command{
         } catch (ServiceException e) {
 
             response = "something went wrong";
-            log.log(Level.WARNING, e.getLocalizedMessage());
         }
 
         return response;
-
     }
-
 
 }
